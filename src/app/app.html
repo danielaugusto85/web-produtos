@@ -1,53 +1,75 @@
 <div>
 
   <h4>Consulta de produtos</h4>
-    <p>
-      Pesquise os produtos através do nome:
-    </p>
+  <p>    
+    Pesquise os produtos através do nome:    
+  </p>
 
-    <div>
-      <input type="text" placeholder="Digite o nome do produto..." [(ngModel)]="nomeProduto"/>
-      <button (click)="pesquisarProdutos()">
-        Pesquisar
-      </button>
+  @if(mensagem()) {
+    <div class="notificacao">
+      {{ mensagem() }}
     </div>
+  }
 
-    @if (produtos().length > 0) {
-      <table>
-        <thead>
+  <div>
+    <input type="text" placeholder="Digite o nome do produto..." [(ngModel)]="nomeProduto"/>
+    <button (click)="pesquisarProdutos()">
+      Pesquisar
+    </button>
+    <button class="botao_novoproduto" (click)="novoProduto()">
+      Novo produto
+    </button>
+  </div>
+
+  @if(exibirFormulario()) {
+      <br/>
+      <h4>Cadastrar produto</h4>
+      <div>
+        <input type="text" placeholder="Nome do produto" [(ngModel)]="produtoSelecionado().nome"/>
+        <input type="text" placeholder="Descrição" [(ngModel)]="produtoSelecionado().descricao"/>
+        <input type="text" placeholder="Preço" [(ngModel)]="produtoSelecionado().preco"/>
+        <input type="number" min="1" placeholder="Quantidade" [(ngModel)]="produtoSelecionado().quantidade"/>
+        <button class="botao_novoproduto" (click)="cadastrarProduto()">Salvar</button>
+        <button (click)="cancelarEdicao()">Cancelar</button>
+      </div>
+
+  }
+
+  @if(produtos().length > 0) {
+    <table>
+      <thead>
+        <tr>
+          <th>Nome do produto</th>
+          <th>Descrição</th>
+          <th>Preço</th>
+          <th>Quantidade</th>
+          <th>Total</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(p of produtos(); track p.id) {
           <tr>
-            <th>Nome do produto</th>
-            <th>Descrição</th>
-            <th>Preço</th>
-            <th>Quantidade</th>
-            <th>Total</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for(p of produtos(); track p.id) {
-            <tr>
-              <td>{{ p.nome | uppercase}}</td>
-              <td>{{ p.descricao }}</td>
-              <td>{{ p.preco | currency: 'R$' }}</td>
-              <td>{{ p.quantidade }}</td>
-              <td>{{ p.total | currency: 'R$'}}</td>
-              <td>
-                <button>Editar</button>
-                <button>Excluir</button>
-              </td>
-            </tr>
-          }
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="6">
-            Quantidade de produtos: {{ produtos().length }}
+            <td>{{ p.nome | uppercase }}</td>
+            <td>{{ p.descricao }}</td>
+            <td>{{ p.preco | currency: 'R$ ' }}</td>
+            <td>{{ p.quantidade }}</td>
+            <td>{{ p.total | currency: 'R$ ' }}</td>
+            <td>
+              <button>Editar</button>
+              <button (click)="excluirProduto(p.id)">Excluir</button>
             </td>
           </tr>
-        </tfoot>
-      </table>
-      
+        }
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="6">
+            Quantidade de produtos: {{ produtos().length }}
+          </td>
+        </tr>
+      </tfoot>
+    </table>
   }
 
 </div>
